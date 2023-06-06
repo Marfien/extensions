@@ -3,7 +3,7 @@ package dev.marfien.extensions;
 public class Extensions {
 
     static {
-        System.setProperty("dev.marfien.extensions.RandomStringLength", "16");
+        System.setProperty(PropertyKey.RANDOM_STRING_LENGTH, "16");
     }
 
 }

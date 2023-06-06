@@ -16,7 +16,34 @@ This library uses three different types of extensions:
 
 ## Usage
 
+Add it to your project as maven dependency
+
+In your Maven project:
+```xml
+<dependencies>
+  <dependency>
+    <groupId>dev.marfien</groupId>
+    <artifactId>extensions</artifactId>
+    <version>VERSION</version>
+  </dependency>
+</dependencies>
+```
+
+Or in your Gradle project:
+```kotlin
+val extensions = "dev.marfien:extensions:VERSION"
+
+dependencies {
+  implementation(extensions)
+  annotationProcessor(extensions)
+}
+```
+
 ### Implementation
+
+You want to implement extensions in your own project? Here you go:
+
+1. You need to create a new `ExtensionEnvironment` to let the 
 
 ### extensions
 

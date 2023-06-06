@@ -1,8 +1,8 @@
 package dev.marfien.extensions.environment;
 
-import dev.marfien.extensions.annotation.inject.ApplicationWorkingDirectory;
-import dev.marfien.extensions.annotation.inject.RandomStringValue;
-import dev.marfien.extensions.annotation.inject.RandomValue;
+import dev.marfien.extensions.annotation.binding.ApplicationWorkingDirectory;
+import dev.marfien.extensions.annotation.binding.RandomStringValue;
+import dev.marfien.extensions.annotation.binding.RandomValue;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

@@ -1,4 +1,4 @@
-package dev.marfien.extensions.annotation.inject;
+package dev.marfien.extensions.annotation.binding;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

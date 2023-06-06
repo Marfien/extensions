@@ -1,4 +1,4 @@
-package dev.marfien.extensions.annotation.inject;
+package dev.marfien.extensions.annotation.binding;
 
 import com.google.inject.BindingAnnotation;
 

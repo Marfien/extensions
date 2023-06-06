@@ -1,9 +1,8 @@
-package dev.marfien.extensions.annotation.inject;
+package dev.marfien.extensions.annotation.binding;
 
 import com.google.inject.BindingAnnotation;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.internal.Annotations;
-import com.google.inject.name.Named;
 import dev.marfien.extensions.PropertyKey;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;

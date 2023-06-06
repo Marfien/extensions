@@ -56,14 +56,15 @@ You want to implement extensions in your own project? Here you go:
 )
 @Author({"Mike", "Peter", "Jeff"})
 @Libraries({
-    "com.google.guava:guava:31.1",
-    "org.jetbrains:annotations:"
+        "org.jetbrains:annotations:24.0.1",
+        "org.slf4j:slf4j-api:2.0.7"
 })
 public class ExampleExtension {
 
   @Inject
   private ExamplePlatform platform;
 
+  @Inject
   public ExampleExtension(Logger logger) {
     logger.info("ExampleExtensions says Hi 👋");
   }
@@ -72,8 +73,6 @@ public class ExampleExtension {
   public void afterX(ExampleDependencyExtension dep) { // or afterX() {
     // do some stuff
   }
-  
-  @Hook()
 
   @Destruct
   public void destruct() {

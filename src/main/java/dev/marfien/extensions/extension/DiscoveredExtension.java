@@ -8,7 +8,8 @@ import java.util.Optional;
 
 public final class DiscoveredExtension {
 
-    private Object extensionObject;
+    private Object instance;
+    private ExtensionClassLoader classLoader;
 
     private final Path file;
     private final ExtensionDescription description;
@@ -19,8 +20,28 @@ public final class DiscoveredExtension {
         this.description = description;
     }
 
-    public Optional<Object> getExtensionObject() {
-        return Optional.ofNullable(this.extensionObject);
+    @ApiStatus.Internal
+    public void setInstance(@NotNull Object object) {
+        if (this.instance != null)
+            throw new IllegalStateException("The extension '%s' is already initialized.".formatted(this.description.id()));
+
+        this.instance = object;
+    }
+
+    @ApiStatus.Internal
+    public void setClassLoader(@NotNull ExtensionClassLoader classLoader) {
+        if (this.instance != null)
+            throw new IllegalStateException("The extension '%s' already has a class loader.".formatted(this.description.id()));
+
+        this.classLoader = classLoader;
+    }
+
+    public Optional<Object> getInstance() {
+        return Optional.ofNullable(this.instance);
+    }
+
+    public ExtensionClassLoader getClassLoader() {
+        return this.classLoader;
     }
 
     public Path getFile() {

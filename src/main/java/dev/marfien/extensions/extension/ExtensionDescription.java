@@ -15,6 +15,7 @@ public record ExtensionDescription(
         @NotNull String id,
         @NotNull String version,
         @NotNull String name,
+        @NotNull String entrypoint,
         @Nullable String author,
         @NotNull Collection<Dependency> dependencies,
         @NotNull Collection<Library> libraries

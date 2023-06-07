@@ -2,6 +2,7 @@ package dev.marfien.extensions.environment;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Key;
+import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.LinkedBindingBuilder;
@@ -24,6 +25,11 @@ public abstract class AbstractExtensionEnvironment implements ExtensionEnvironme
     @Override
     public <T> LinkedBindingBuilder<T> bind(@NotNull Key<T> key) {
         return this.module.bind(key);
+    }
+
+    @Override
+    public Module getModule() {
+        return this.module;
     }
 
     private static class ExtensionEnvironmentModule extends AbstractModule {

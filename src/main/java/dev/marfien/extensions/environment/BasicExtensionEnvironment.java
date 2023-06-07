@@ -29,12 +29,12 @@ public class BasicExtensionEnvironment extends AbstractExtensionEnvironment {
     }
 
     @Override
-    public Path getDefaultExtensionsContainer() {
+    public Path getExtensionsContainer() {
         return this.extensionsContainer;
     }
 
     @Override
-    public Path getDefaultLibrariesContainer() {
+    public Path getLibrariesContainer() {
         return this.librariesContainer;
     }
 

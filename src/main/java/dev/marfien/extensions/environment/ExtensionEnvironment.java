@@ -1,18 +1,21 @@
 package dev.marfien.extensions.environment;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Key;
+import com.google.inject.Module;
 import com.google.inject.TypeLiteral;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.LinkedBindingBuilder;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 
 public interface ExtensionEnvironment {
 
-    Path getDefaultExtensionsContainer();
+    Path getExtensionsContainer();
 
-    Path getDefaultLibrariesContainer();
+    Path getLibrariesContainer();
 
     void configure();
 
@@ -21,5 +24,8 @@ public interface ExtensionEnvironment {
     <T> AnnotatedBindingBuilder<T> bind(@NotNull TypeLiteral<T> typeLiteral);
 
     <T> LinkedBindingBuilder<T> bind(@NotNull Key<T> key);
+
+    @ApiStatus.Internal
+    Module getModule();
 
 }

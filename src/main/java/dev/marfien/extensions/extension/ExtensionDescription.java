@@ -6,9 +6,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Collection;
 
-public record ExtensionMeta(
+public record ExtensionDescription(
         @NotNull String id,
         @NotNull String version,
         @NotNull String name,
@@ -39,9 +42,9 @@ public record ExtensionMeta(
         }
     }
 
-    public static ExtensionMeta fromJson(@NotNull String jsonTree) throws ParseException {
+    public static ExtensionDescription fromJson(@NotNull InputStream input) throws ParseException, IOException {
         JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(jsonTree);
+        JSONObject object = (JSONObject) parser.parse(new InputStreamReader(input));
 
         String id = (String) object.get("id");
         String version = (String) object.get("version");
@@ -50,7 +53,7 @@ public record ExtensionMeta(
 
         String entrypoint = (String) object.get("entrypoint");
 
-        return new ExtensionMeta(id, version, name, author, null, null); // TODO implement entrypoint and dependencies/libraries
+        return new ExtensionDescription(id, version, name, author, null, null); // TODO implement entrypoint and dependencies/libraries
     }
 
 }

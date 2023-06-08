@@ -6,7 +6,10 @@ import dev.marfien.extensions.extension.DiscoveredExtension;
 import dev.marfien.extensions.extension.ExtensionDescription;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public final class Extender {
 
@@ -17,18 +20,27 @@ public final class Extender {
     private final Map<String, DiscoveredExtension> extensionById = Maps.newConcurrentMap();
     private final Map<Object, DiscoveredExtension> extensionsByInstance = Maps.newConcurrentMap();
 
-    public void initializeSingle(@NotNull DiscoveredExtension extension) {
-        ExtensionDescription description = extension.getDescription();
-        String entrypoint = description.entrypoint();
-
-        this.checkDependenciesLoaded(description);
+    public Extender(@NotNull ExtensionEnvironment environment) {
+        this.environment = environment;
     }
 
-    private boolean checkDependenciesDiscovered(final ExtensionDescription description) {
+    public void initialize() {
+        Collection<DiscoveredExtension> extensions = this.findAll();
+
+        // No need to remove nothing
+        if (!this.extensionsByInstance.isEmpty())
+            // but we don't want to instantiate an extension twice
+            extensions.removeAll(this.findAllInitialized());
+
+
+    }
+
+    private boolean checkDependenciesDiscovered(@NotNull ExtensionDescription description) {
         for (ExtensionDescription.Dependency dependency : description.dependencies()) {
             // irrelevant for just checking if the extension is eligible to be initialized
             if (dependency.soft()) continue;
 
+            // but if it is a required dependency it must be present
             if (!this.extensionById.containsKey(dependency.id()))
                 return false;
         }
@@ -36,7 +48,7 @@ public final class Extender {
         return true;
     }
 
-    private boolean checkDependenciesLoaded(final ExtensionDescription description) {
+    private boolean checkDependenciesLoaded(@NotNull ExtensionDescription description) {
         for (ExtensionDescription.Dependency dependency : description.dependencies()) {
             // If the dependency is required we need to check if it is initialized.
             if (!dependency.soft()) {
@@ -44,17 +56,17 @@ public final class Extender {
                 continue;
             }
 
-            // This is the harder part.
-            // Therefore, that it is optional, we cannot just use this.isInitialized() cause
-            // that would fail as well when the dependency is not present at all.
-            // But we want it to be initialized when it is present but don't really care if it is not
-            // there at all.
+            // Fist try to find the dependency
             Optional<DiscoveredExtension> optionalDiscoveredDependency = this.findById(dependency.id());
 
+            // if it is not known at all we can simply ignore it, because it is optional
             if (optionalDiscoveredDependency.isEmpty()) continue;
 
+            // but if it is found we need to check if it is instantiated
             DiscoveredExtension discoveredDependency = optionalDiscoveredDependency.get();
 
+            // if the instance of the dependency is not available it is not instantiated
+            // Therefore, it is known but need to be instantiated first
             if (discoveredDependency.getInstance().isEmpty()) return false;
 
         }
@@ -81,7 +93,10 @@ public final class Extender {
     }
 
     public Collection<DiscoveredExtension> findAll() {
-        assert this.extensionsByInstance.size() == this.extensionById.size();
+        return List.copyOf(this.extensionById.values());
+    }
+
+    public Collection<DiscoveredExtension> findAllInitialized() {
         return List.copyOf(this.extensionsByInstance.values());
     }
 
@@ -92,4 +107,5 @@ public final class Extender {
     public Discoverer getDiscoverer() {
         return this.discoverer;
     }
+
 }

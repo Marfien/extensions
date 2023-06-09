@@ -87,7 +87,7 @@ public class DependencyGraph {
             @NotNull Stack<String> stackTrace) {
         NodeState state = nodeVisitingStates.get(currentNode);
 
-        if (state == null) throw new RuntimeException(); // TODO exception for unknown dependency
+        // if (state == null) throw new RuntimeException(); // (?) TODO exception for unknown dependency
 
         // early return, all work was already done previously
         if (state == NodeState.VISITED) return;

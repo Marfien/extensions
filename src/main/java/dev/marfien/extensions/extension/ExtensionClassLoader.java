@@ -3,33 +3,50 @@ package dev.marfien.extensions.extension;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @ApiStatus.Internal
 public class ExtensionClassLoader extends URLClassLoader {
 
-    @ApiStatus.Internal
-    public ExtensionClassLoader(String name, Collection<Path> paths, ClassLoader parent) {
-        super(name, mapToURL(paths), parent);
+    private final Collection<ExtensionClassLoader> childCLassLoaders;
+
+    public ExtensionClassLoader(String name, Collection<ExtensionClassLoader> children, ClassLoader parent) {
+        super(name, new URL[0], parent);
+
+        this.childCLassLoaders = new ArrayList<>(children);
+    }
+
+    public void addChild(@NotNull ExtensionClassLoader classLoader) {
+        this.childCLassLoaders.add(classLoader);
+    }
+
+    @Override
+    public void addURL(URL url) {
+        super.addURL(url);
     }
 
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        return super.loadClass(name, resolve); // TODO lookup for classes in dependencies
-    }
+        try {
+            return super.loadClass(name, resolve);
+        } catch (ClassNotFoundException ignored) {
+            // save to ignore
+            // just looking through every child class loader
+        }
 
-    private static URL[] mapToURL(@NotNull Collection<Path> paths) {
-        return paths.stream().map(path -> {
+        for (ExtensionClassLoader childCLassLoader : this.childCLassLoaders) {
             try {
-                return path.toUri().toURL();
-            } catch (MalformedURLException e) {
-                throw new AssertionError(e);
+                childCLassLoader.loadClass(name, resolve);
+            } catch (ClassNotFoundException ignored) {
+                // save to ignore
+                // looking through every child
             }
-        }).toArray(URL[]::new);
+        }
+
+        throw new ClassNotFoundException(name);
     }
 
 
